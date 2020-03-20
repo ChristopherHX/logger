@@ -8,7 +8,7 @@
     static void name(const char* tag, const char* text, ...) __attribute__ ((format (printf, 2, 3))) { \
         va_list args; \
         va_start(args, text); \
-        vlog(logLevel, tag, text, args); \
+        mcpelauncher_vlog(logLevel, tag, text, args); \
         va_end(args); \
     }
 
@@ -20,28 +20,12 @@ enum class LogLevel {
     LOG_ERROR
 };
 
+extern "C" void mcpelauncher_vlog(LogLevel level, const char* tag, const char* text, va_list args);
+extern "C" void mcpelauncher_log(LogLevel level, const char* tag, const char* text, ...);
+
 class Log {
 
 public:
-
-    static inline const char *getLogLevelString(LogLevel lvl) {
-        if (lvl == LogLevel::LOG_TRACE) return "Trace";
-        if (lvl == LogLevel::LOG_DEBUG) return "Debug";
-        if (lvl == LogLevel::LOG_INFO) return "Info";
-        if (lvl == LogLevel::LOG_WARN) return "Warn";
-        if (lvl == LogLevel::LOG_ERROR) return "Error";
-        return "?";
-    }
-
-    static void vlog(LogLevel level, const char* tag, const char* text, va_list args);
-
-    static void log(LogLevel level, const char* tag, const char* text, ...) {
-        va_list args;
-        va_start(args, text);
-        vlog(level, tag, text, args);
-        va_end(args);
-    }
-
     LogFuncDef(trace, LogLevel::LOG_TRACE)
     LogFuncDef(debug, LogLevel::LOG_DEBUG)
     LogFuncDef(info, LogLevel::LOG_INFO)
